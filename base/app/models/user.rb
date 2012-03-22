@@ -28,7 +28,8 @@ class User < ActiveRecord::Base
 
   validates_format_of :email, :with => Devise.email_regexp, :allow_blank => true
 
-  validate :email_must_be_uniq
+  # for us email is not unique..
+  #validate :email_must_be_uniq
   
   with_options :if => :password_required? do |v|
     v.validates_presence_of     :password
