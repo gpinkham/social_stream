@@ -3,7 +3,7 @@ class SocialStream::Base::InstallGenerator < Rails::Generators::Base #:nodoc:
 
   hook_for :taggings, :as => :migration
   hook_for :authentication
-  hook_for :messages
+  #hook_for :messages
 
   source_root File.expand_path(File.join('..', 'templates'), __FILE__)
 
