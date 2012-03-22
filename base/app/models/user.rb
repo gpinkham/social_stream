@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
     v.validates_confirmation_of :password
     v.validates_length_of       :password, :within => Devise.password_length, :allow_blank => true
   end
+
+  def id
+    userID
+  end
   
   def recent_groups
     contact_subjects(:type => :group, :direction => :sent) do |q|
