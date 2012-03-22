@@ -15,7 +15,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def fpgaming
+  def Fpgaming
     @user = User.find_or_create_for_fpgaming_oauth(env['omniauth.auth'],current_user)
 
     if @user.persisted?
