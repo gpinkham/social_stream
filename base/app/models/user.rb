@@ -37,10 +37,8 @@ class User < ActiveRecord::Base
     v.validates_length_of       :password, :within => Devise.password_length, :allow_blank => true
   end
 
-  def id
-    userID
-  end
-  
+  alias_attribute :id, :userID
+
   def recent_groups
     contact_subjects(:type => :group, :direction => :sent) do |q|
       q.select("contacts.created_at").
