@@ -158,8 +158,13 @@ class User < ActiveRecord::Base
 
     def find_or_create_for_fpgaming_oauth(hash,signed_in_resource=nil)
       auth = Authentication.find_by_uid_and_provider(hash["uid"],hash["provider"])
+      user = User.find_by_userID(hash[:uid])
       if auth==nil
-        user = User.create!(:userID => hash[:uid], :name => hash["info"]["name"], :email => hash["info"]["email"], :profileURL => hash["info"]["profile_url"], :password => Devise.friendly_token[0,20])
+        if user && (user.name.blank? || user.profileURL.blank? || user.email.blank?)
+          user.update_attributes(:name => hash["info"]["name"], :email => hash["info"]["email"], :profileURL => hash["info"]["profile_url"])
+        else
+          user = User.create!(:userID => hash[:uid], :name => hash["info"]["name"], :email => hash["info"]["email"], :profileURL => hash["info"]["profile_url"], :password => Devise.friendly_token[0,20])
+        end
         auth = Authentication.create!(:user_id => user.id, :uid =>hash["uid"], :provider => hash["provider"])
         user
       else
