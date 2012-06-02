@@ -4,17 +4,12 @@ class FollowersController < ApplicationController
   respond_to :html, :js
 
   def index
-    @contacts =
-      if params[:following]
-        current_subject.sent_contacts
-      else
-        current_subject.received_contacts
-      end
+    @followings = current_subject.following_actor_objects.includes(:actor)
+    @followers = current_subject.followers
 
     respond_to do |format|
-      format.html { @contacts = @contacts.page(params[:page]).per(20) }
-      format.js { @contacts = @contacts.page(params[:page]).per(20) }
-      format.json { render :text => to_json(@contacts) }
+      format.html
+      format.json { render :text => to_json(@followers) }
     end
   end
 

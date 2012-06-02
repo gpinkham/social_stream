@@ -13,6 +13,12 @@ describe GroupsController do
       assert_response :success
     end
 
+    it "should render index with most followed" do
+      get :index, :most => 'followed'
+
+      response.should be_success
+    end
+
     it "should render show" do
       get :show, :id => Factory(:group).to_param
 
@@ -164,16 +170,16 @@ describe GroupsController do
 
       it "should allow creating" do
         count = Group.count
-        post :create, :group => { :name => "Test" }
+        post :create, :group => { :name => "Test new group" }
 
-        group = assigns(:group)
+        new_group = assigns(:group)
 
-        group.should be_valid
+        new_group.should be_valid
         Group.count.should eq(count + 1)
-        assigns(:current_subject).should eq(group)
+        assigns(:current_subject).should eq(new_group)
         response.should redirect_to(:home)
-        @user.receivers.should include(group.actor)
-        @group.receivers.should include(group.actor)
+        @user.senders.should include(new_group.actor)
+        @group.senders.should include(new_group.actor)
       end
     end
   end

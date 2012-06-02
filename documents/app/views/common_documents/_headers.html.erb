@@ -1,25 +1,30 @@
 <% content_for :title do %>
-<%= profile_subject.name + ": " + t('repository.title') %>
+  <%= "#{ profile_subject && profile_subject.name + ': ' }#{ t('repository.title') }" %>
 <% end %>
 
 <% sidebar %>
 
-<%if profile_subject_is_current?%>
-<%= location(
-  link_to(t('repository.title'), polymorphic_path(controller.controller_name),:remote => true)
-  ) %>
-<%else%>
-<%= location(
-  link_to(profile_subject.name, polymorphic_path(profile_subject),:remote => true),
-  link_to(t('repository.title'), polymorphic_path([profile_subject, controller.controller_name]),:remote => true)
-  ) %>
-<%end%>
+<% if profile_subject %>
+  <%= location(
+    link_to(profile_subject.name, polymorphic_path(profile_subject),:remote => true),
+    link_to(t('repository.title'), polymorphic_path([profile_subject, controller.controller_name]),:remote => true)
+    ) %>
+<% else %>
+  <%= location(
+    link_to(t('repository.title'), polymorphic_path(controller.controller_name),:remote => true)
+    ) %>
+<% end %>
 
-<% toolbar :profile, :subject => profile_subject %>
+<% if profile_subject %>
+  <% toolbar :profile, :subject => profile_subject %>
+<% elsif user_signed_in? %>
+  <% toolbar %>
+<% end %>
+
 <br class="clearfloat" />
 <div class="space_center"></div>
 <div id="repository_filter">
-    <%= text_field_tag :filter_query, nil,:autocomplete => :off, :id => :repository_filter_input %>
+    <%= text_field_tag :q, nil,:autocomplete => :off, :id => :repository_filter_input %>
   <div id="order_by"><%= t('repository.order.by') %>: <%= t('repository.order.last_modified') %> · <%= t('repository.order.most_popular') %>  </div>
 </div>
 <div class="space_center"></div>
@@ -38,7 +43,7 @@ $(document).ready(function() {
       $("#documents_grid").html("<center><%= escape_javascript(image_tag('loading.gif', :class => :loading)) %></center>");
         $.ajax({
           type : "GET",
-          url : "<%= polymorphic_url([current_subject, Document.new]) %>?no_layout=true",
+          url : "<%= polymorphic_path([ profile_subject, Document.new ], :action => :search) %>",
           success : function(html) {      
             if ($("#repository_filter_input").val()==searchstring){ //Only show if input value is still the same
               $("#documents_grid").html(html);
@@ -54,7 +59,7 @@ $(document).ready(function() {
         $("#documents_grid").html("<center><%= escape_javascript(image_tag('loading.gif', :class => :loading)) %></center>");
         $.ajax({
           type : "GET",
-          url : "<%= polymorphic_url([current_subject, Document.new]) %>?query=" + searchstring + "&no_layout=true",
+          url : "<%= polymorphic_path([ profile_subject, Document.new ], :action => :search) %>?q=" + searchstring,
           success : function(html) {      
             if ($("#repository_filter_input").val()==searchstring){ //Only show if input value is still the same
               $("#documents_grid").html(html);

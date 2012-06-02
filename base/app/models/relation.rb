@@ -55,6 +55,8 @@ class Relation < ActiveRecord::Base
   has_many :audiences, :dependent => :destroy
   has_many :activities, :through => :audiences
 
+  has_many :activity_object_audiences, :dependent => :destroy
+
   scope :actor, lambda { |a|
     where(:actor_id => Actor.normalize_id(a))
   }
@@ -65,6 +67,11 @@ class Relation < ActiveRecord::Base
 
   scope :positive, lambda {
     where(:type => positive_names)
+  }
+
+  scope :allowing, lambda { |action, object|
+    joins(:permissions).
+      merge(Permission.where(:action => action).where(:object => object))
   }
 
   before_create :initialize_sender_type
@@ -146,6 +153,21 @@ class Relation < ActiveRecord::Base
 
     def allow?(*args)
       allow(*args).to_a.any?
+    end
+
+    # All the {Relation} ids in {Tie Ties} this subject has received
+    # plus the one from {Relation::Public}
+    def ids_shared_with(subject)
+      ids = [Relation::Public.instance.id]
+
+      if SocialStream.relation_model == :custom && subject.present?
+        # Subject own defined custom relations
+        ids += subject.relation_ids
+        # From Ties sent by other subject
+        ids += subject.received_relation_ids
+      end
+
+      ids
     end
   end
 

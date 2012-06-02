@@ -38,6 +38,7 @@ es:
       public:
         summary: "Público"
         full: "Accesible por toda Internet"
+      show: "Show"
       visible:
         summary: "Restringido"
         full: "Compartido con %{audience}"
@@ -190,7 +191,11 @@ es:
       instructions: "Introduce el correo electrónico y te mandaremos instrucciones para cambiarlo"
       update: "Cambiar contraseña"
   follower:
-    n:
+    follower:
+      title: "Seguidores"
+    following:
+      title: "Siguiendo"
+  n:
       one: "1 seguidor/a"
       other: "%{count} seguidores"
   forgot_password: "¿Olvidaste tu contraseña?"

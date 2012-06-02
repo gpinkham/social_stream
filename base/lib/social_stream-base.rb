@@ -19,15 +19,31 @@ module SocialStream
   end
 
   module Models
-    autoload :Channeled, 'social_stream/models/channeled'
     autoload :Object,    'social_stream/models/object'
     autoload :Subject,   'social_stream/models/subject'
     autoload :Subtype,   'social_stream/models/subtype'
     autoload :Supertype, 'social_stream/models/supertype'
   end
 
+  module Population
+    autoload :ActivityObject, 'social_stream/population/activity_object'
+    autoload :PowerLaw,       'social_stream/population/power_law'
+    autoload :Timestamps,     'social_stream/population/timestamps'
+  end
+
+  module Routing
+    module Constraints
+      autoload :Custom, 'social_stream/routing/constraints/custom'
+      autoload :Follow, 'social_stream/routing/constraints/follow'
+      autoload :Resque, 'social_stream/routing/constraints/resque'
+    end
+  end
+
+  autoload :Search, 'social_stream/search'
+
   module Views
-    autoload :List, 'social_stream/views/list'
+    autoload :List,     'social_stream/views/list'
+    autoload :Location, 'social_stream/views/location'
 
     module Settings
       autoload :Base, 'social_stream/views/settings/base'
@@ -62,7 +78,10 @@ module SocialStream
 
   mattr_accessor :relation_model
   @@relation_model = :custom
-  
+
+  mattr_accessor :resque_access
+  @@resque_access = true
+ 
   mattr_accessor :quick_search_models
   @@quick_search_models = [ :user, :group, :post ]
   

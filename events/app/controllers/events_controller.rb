@@ -1,8 +1,6 @@
 class EventsController < ApplicationController
   include SocialStream::Controllers::Objects
 
-  belongs_to_subjects :optional => true
-
   before_filter :profile_subject!, :only => :index
 
   def index
@@ -31,7 +29,7 @@ class EventsController < ApplicationController
 
   def collection
     @activities =
-      profile_subject.wall(:profile,
+      (profile_subject || current_subject).wall(:profile,
                            :for => current_subject,
                            :object_type => :Event)
   end

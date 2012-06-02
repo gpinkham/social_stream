@@ -1,3 +1,8 @@
+# {Group Groups} are the other kind of social entities supported in SocialStream::Base
+#
+# As with {User}, almost all the interaction with other classes in Social Stream is done
+# through {Actor}. The glue between {Group} and {Actor} is in {SocialStream::Models::Subject}
+#
 class Group < ActiveRecord::Base
   include SocialStream::Models::Subject
 
@@ -29,6 +34,8 @@ class Group < ActiveRecord::Base
 
   # Creates the ties from the founder to the group
   def create_ties_from_founder
+=begin
+    # FIXME: need to define a proper relation for this case. Maybe a system defined relation
     author.sent_contacts.create! :receiver_id  => actor_id,
                                  :relation_ids => _relation_ids
 
@@ -36,6 +43,7 @@ class Group < ActiveRecord::Base
       user_author.sent_contacts.create! :receiver_id  => actor_id,
                                         :relation_ids => _relation_ids
     end
+=end
   end
   
   # Creates the ties from the group to the participants

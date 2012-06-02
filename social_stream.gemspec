@@ -11,11 +11,11 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
 
   # Gem dependencies
-  s.add_runtime_dependency('social_stream-base', '~> 0.18.0')
-  s.add_runtime_dependency('social_stream-documents', '~> 0.12.0')
-  s.add_runtime_dependency('social_stream-events', '~> 0.10.0')
-  s.add_runtime_dependency('social_stream-linkser', '~> 0.8.0')
-  s.add_runtime_dependency('social_stream-presence', '~> 0.11.0')
+  s.add_runtime_dependency('social_stream-base', '~> 0.21.0')
+  s.add_runtime_dependency('social_stream-documents', '~> 0.15.0')
+  s.add_runtime_dependency('social_stream-events', '~> 0.13.0')
+  s.add_runtime_dependency('social_stream-linkser', '~> 0.12.0')
+  s.add_runtime_dependency('social_stream-presence', '~> 0.14.0')
  
   # Development Gem dependencies
   #
@@ -37,7 +37,7 @@ Gem::Specification.new do |s|
     if RUBY_VERSION < '1.9'
       s.add_development_dependency('ruby-debug')
     else
-      s.add_development_dependency('ruby-debug19')
+      s.add_development_dependency('debugger')
     end
   end
   # Specs

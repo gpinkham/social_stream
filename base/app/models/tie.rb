@@ -28,6 +28,12 @@ class Tie < ActiveRecord::Base
   has_one :receiver, :through => :contact
 
   belongs_to :relation
+  has_many :permissions, :through => :relation
+
+  scope :allowing, lambda { |action, object|
+    joins(:relation).
+      merge(Relation.allowing(action, object))
+  }
 
   scope :recent, order("ties.created_at DESC")
 
@@ -140,7 +146,7 @@ class Tie < ActiveRecord::Base
     Activity.create! :author        => contact.sender,
                      :user_author   => contact.user_author,
                      :owner         => contact.receiver,
-                     :relation_ids  => contact.relation_ids,
+                     :relation_ids  => contact.receiver.activity_relation_ids,
                      :activity_verb => ActivityVerb[contact.verb]
   end
 

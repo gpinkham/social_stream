@@ -15,6 +15,8 @@ Gem::Specification.new do |s|
   #
   # Do not forget to require the file at lib/social_stream/base/dependencies !
   #
+  # Deep Merge support for Hashes
+  s.add_runtime_dependency('deep_merge')
   # Rails
   s.add_runtime_dependency('rails', '>= 3.1.0')
   # Activity and Relation hierarchies
@@ -40,7 +42,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('omniauth-facebook','~> 1.2.0')
   s.add_runtime_dependency('omniauth-linkedin','~> 0.0.6')
   # Messages
-  s.add_runtime_dependency('mailboxer','~> 0.6.0')
+  s.add_runtime_dependency('mailboxer','~> 0.6.5')
   # Tagging
   s.add_runtime_dependency('acts-as-taggable-on','~> 2.2.2')
   # HTML Forms
@@ -56,7 +58,7 @@ Gem::Specification.new do |s|
   # Autolink text blocks
   s.add_runtime_dependency('rails_autolink', '~> 1.0.4')
   # SocialCheesecake
-  s.add_runtime_dependency('social_cheesecake','~> 0.4.0')
+  s.add_runtime_dependency('social_cheesecake','~> 0.5.0')
   # I18n-js
   s.add_runtime_dependency('i18n-js','~>2.1.2')
 
@@ -70,7 +72,7 @@ Gem::Specification.new do |s|
   if RUBY_VERSION < '1.9'
     s.add_development_dependency('ruby-debug')
   else
-    s.add_development_dependency('ruby-debug19')
+    s.add_development_dependency('debugger')
   end
   # Specs
   s.add_development_dependency('rspec-rails', '~> 2.6.1')

@@ -6,6 +6,8 @@ class Document < ActiveRecord::Base
   has_attached_file :file, 
                     :url => '/:class/:id.:extension',
                     :path => ':rails_root/documents/:class/:id_partition/:style/:filename.:extension'
+
+  paginates_per 20
   
   validates_attachment_presence :file
   validates_presence_of :title
@@ -15,14 +17,9 @@ class Document < ActiveRecord::Base
   end
   
   define_index do
-    indexes activity_object.title
+    activity_object_index
+
     indexes file_file_name, :as => :file_name
-    indexes activity_object.description
-    indexes activity_object.tags.name, :as => :tags
-    
-    where "type IS NULL"
-    
-    has created_at
   end
   
   class << self 
@@ -67,6 +64,16 @@ class Document < ActiveRecord::Base
     else
       "#{ size.to_s }/default.png"
     end
+  end
+
+ # JSON, generic version for most documents
+  def as_json(options = nil)
+    {:id => id,
+     :title => title,
+     :description => description,
+     :author => author.name,
+     :src => file.to_s
+    }
   end
   
   protected

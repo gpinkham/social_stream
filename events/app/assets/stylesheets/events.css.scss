@@ -14,20 +14,15 @@
   float: left;
   font-weight: bold;
   text-align: center;
-  vertical-align: middle;
-  padding: 10px;
-  width: 40px;
+  width: 45px;
 }
-
 
 a.event_date {
   color: $details-color;
 }
 
 div.event_date {
-    margin-left: 5px;
-    margin-right: 7px;
-    width: 64px;
+  margin-top: 25px;
 }
 
 .event_day {
@@ -60,7 +55,7 @@ div.event_date {
 .event_poster {
 	width: 80px;
 	height: 113px;
-	margin-right: 10px;
+	margin-left: 5px;
 	float: left;
 	position: relative;
 }
@@ -90,6 +85,10 @@ div.event_date {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	height: 50px;
+}
+
+.event_details .title {
+	text-align: left;
 }
 
 .event_details .follow_form {
@@ -203,8 +202,8 @@ div.event_date {
 }
 
 .tipsy-sidebar_calendar {
-	min-width: 300px;
-	width: 300px;
+	min-width: 470px;
+	width: 470px;
 	border: solid $separation-color 1px;
 	padding: 10px;
 	background-color: #FFF;

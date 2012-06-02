@@ -38,6 +38,12 @@ SocialStream.Wall = (function(SS, $, undefined){
     });
   }
 
+  var changeSecurityImage = function(type) {
+    $('#security_chzn .chzn-choices').
+      css('background-image', 'url(<%= asset_path('btn/') %>' + type + '.png)');
+  }
+
+
   var initSecuritySelect = function(){
     var default_security_width = '100px';
 
@@ -63,6 +69,9 @@ SocialStream.Wall = (function(SS, $, undefined){
               chosen.results_update_field();
             }
           }
+          changeSecurityImage('public');
+        } else {
+          changeSecurityImage('restricted');
         }
       });
 
@@ -91,7 +100,7 @@ SocialStream.Wall = (function(SS, $, undefined){
       });
       $("#masterSubmitButton").val(I18n.t('activity.sending') + '...').attr("disabled", true); 
 
-      // Add _relation_ids[] parameter from authorization selector
+      // Add relation_ids[] parameter from authorization selector
       $('.liveAdded').remove();
 
       var currentForm = $(this);
@@ -102,7 +111,7 @@ SocialStream.Wall = (function(SS, $, undefined){
           .addClass('liveAdded')
           .attr('type', 'hidden')
           .attr('name', currentForm
-            .attr('id').split('_')[1]+'[_relation_ids][]')
+            .attr('id').split('_')[1]+'[relation_ids][]')
           .val($(this).attr('value')));
       });
       return true;
@@ -128,7 +137,7 @@ SocialStream.Wall = (function(SS, $, undefined){
       $(this).removeAttr("readonly").val("").blur();
     });  
     //New comments
-    $('.input_new_comments').each(function() {chosen.result_deselect(0)
+    $('.input_new_comments').each(function() {
       $(this).removeAttr("readonly").val("");
     }); 
   }
@@ -140,10 +149,11 @@ SocialStream.Wall = (function(SS, $, undefined){
   addInitCallback(initSecuritySelect);
   addInitCallback(activateAntiRebounds);
 
+  SS.Timeline.addCreateCallback(unblockForms);
   return {
     addInitCallback: addInitCallback,
       init: init,
       activateAntiRebounds: activateAntiRebounds,
-      unblockForms: unblockForms  
+      unblockForms: unblockForms
   };
 }) (SocialStream, jQuery)

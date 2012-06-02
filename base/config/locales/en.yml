@@ -38,6 +38,7 @@ en:
       public:
         summary: "Public"
         full: "Shared with all the Internet"
+      show: "Mostrar"
       visible:
         summary: "Restricted"
         full: "Shared with %{audience}"
@@ -191,6 +192,10 @@ en:
       instructions: "Type the email address bound to your account and we will sent you instructions to change it:"
       update: "Change your password"
   follower:
+    follower:
+      title: "Followers"
+    following:
+      title: "Followings"
     n:
       one: "1 follower"
       other: "%{count} followers"

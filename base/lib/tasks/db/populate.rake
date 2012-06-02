@@ -17,8 +17,9 @@ namespace :db do
     task :read_environment => :environment do
       require 'forgery'
 
-      @LOGOS_PATH = File.join(Rails.root, 'lib', 'logos')
-      @LOGOS_TOTAL = (ENV["LOGOS_TOTAL"] || 10).to_i
+      @SS_BASE_PATH = Gem::Specification.find_by_name('social_stream-base').full_gem_path
+      @LOGOS_PATH = File.join(@SS_BASE_PATH, 'lib', 'logos')
+      @LOGOS_TOTAL = (ENV["LOGOS_TOTAL"] || 12).to_i
       @USERS = (ENV["USERS"] || 9).to_i
       @GROUPS = (ENV["GROUPS"] || 10).to_i
       if ENV["HARDCORE"].present?
@@ -111,15 +112,24 @@ namespace :db do
       ties_start = Time.now
 
       @available_actors.each do |a|
-        actors = @available_actors.dup - Array(a)
-        relations = a.relation_customs + Array.wrap(Relation::Reject.instance)
-        break if actors.size==0
+        actors = @available_actors.dup
+        actors.delete(a)
+
+        relations = a.relation_customs + [ Relation::Reject.instance ]
+
         Forgery::Basic.number(:at_most => actors.size).times do
           actor = actors.delete_at((rand * actors.size).to_i)
           contact = a.contact_to!(actor)
           contact.user_author = a.user_author if a.subject_type != "User"
-          contact.relation_ids = Array(Forgery::Extensions::Array.new(relations).random.id) unless a==actor
+          contact.relation_ids = [ Forgery::Extensions::Array.new(relations).random.id ]
         end
+      end
+
+      Activity.includes(:activity_verb).merge(ActivityVerb.verb_name(["follow", "make-friend"])).each do |a|
+        t = SocialStream::Population::Timestamps.new
+
+        a.update_attributes :created_at => t.created,
+                            :updated_at => t.updated
       end
 
       ties_end = Time.now
@@ -159,31 +169,10 @@ namespace :db do
     # POSTS
     desc "Create posts"
     task :create_posts => :read_environment do
-      puts 'Post population'
-      posts_start = Time.now
-
-      SocialStream::Populate.power_law(Tie.positive.all) do |t|
-        updated = Time.at(rand(Time.now.to_i))
-
-        author = t.sender
-        owner  = t.receiver
-        user_author = ( t.sender.subject_type == "User" ? t.sender : t.sender.user_author )
-
-        p = Post.create :text =>
-                      "This post should be for #{ t.relation.name } of #{ t.sender.name }.\n#{ Forgery::LoremIpsum.paragraph(:random => true) }",
-                        :created_at => Time.at(rand(updated.to_i)),
-                        :updated_at => updated,
-                        :author_id  => author.id,
-                        :owner_id   => owner.id,
-                        :user_author_id => user_author.id,
-                        :_relation_ids => Array(t.relation_id)
-
-        p.post_activity.update_attributes(:created_at => p.created_at,
-                                          :updated_at => p.updated_at)
+      SocialStream::Population::ActivityObject.new Post do |p|
+        p.text =
+          "This post should be for #{ p.relations.map(&:name).join(", ") } of #{ p.owner.name }.\n#{ Forgery::LoremIpsum.paragraph(:random => true) }"
       end
-
-      posts_end = Time.now
-      puts '   -> ' +  (posts_end - posts_start).round(4).to_s + 's'
     end
 
 

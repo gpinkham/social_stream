@@ -1,4 +1,6 @@
-# Monkey path Ruby on Rails
+# Hash deep merge
+require 'deep_merge'
+# Monkey patch Ruby on Rails
 require 'rails/social_stream'
 # Database foreign keys
 require 'foreigner'
@@ -40,6 +42,7 @@ require 'resque/server'
 require 'modernizr-rails'
 # Sphinx search engine
 require 'thinking-sphinx'
+require 'thinking-sphinx/social_stream'
 # Syntactically Awesome Stylesheets
 require 'sass-rails'
 # Autolink text blocks

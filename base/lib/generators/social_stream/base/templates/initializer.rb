@@ -27,7 +27,11 @@ SocialStream.setup do |config|
   # :follow - user just follow other users, like Twitter
   #
   # config.relation_model = :custom
-  
+
+  # Expose resque interface to manage background tasks at /resque
+  #
+  # config.resque_access = true
+ 
   # Quick search (header) and Extended search models and its order. Remember to create
   # the indexes with thinking-sphinx if you are using customized models.
   # 
@@ -37,3 +41,6 @@ SocialStream.setup do |config|
   # Cleditor controls. It is used in new message editor, for example
   # config.cleditor_controls = "bold italic underline strikethrough subscript superscript | size style | bullets | image link unlink"
 end
+
+# You can customize toolbar, sidebar and location bar from here
+# See https://github.com/ging/social_stream/wiki/How-to-customize-the-toolbar,-sidebar-and-location

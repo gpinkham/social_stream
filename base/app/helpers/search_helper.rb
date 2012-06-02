@@ -1,7 +1,7 @@
 module SearchHelper  
   def too_short_query?
-    return true if params[:search_query].blank?
-    bare_query = strip_tags(params[:search_query]) unless bare_query.html_safe?
+    return true if params[:q].blank?
+    bare_query = strip_tags(params[:q]) unless bare_query.html_safe?
     return bare_query.strip.size < SearchController::MIN_QUERY
   end
   
@@ -26,43 +26,13 @@ module SearchHelper
   
   def get_search_query_words
     search_query = ""
-    bare_query = strip_tags(params[:search_query]) unless bare_query.html_safe?
+    bare_query = strip_tags(params[:q]) unless bare_query.html_safe?
     return bare_query.strip.split
   end
 
-  def search_class(type, model_sym)
-    case type
-    when :selected
-     params[:focus].present? &&
-      params[:focus].eql?(model_sym.to_s) &&
-      'selected' || ''
-    when :disabled
-      search_results?(model_sym) &&
-        '' || 'disabled'
-    else
-      raise "Unknown select search class type"
-   end
-  end
-
-  def search_results?(model_sym)
-    ThinkingSphinx.count(get_search_query,
-                         :classes => [model_sym.to_s.classify.constantize]) > 0
-  end
-
-  def search_tab(model_sym)
-    span_options = {}
-    span_options[:class] = "#{ search_class(:selected, model_sym) } #{ search_class(:disabled, model_sym) } #{ model_sym.to_s.pluralize.downcase }"
-
-    results = search_results?(model_sym)
-
-    unless results
-      span_options[:title] = t('search.no_subject_found', :subject => model_sym.to_s)
-    end
-
-    link_to_if results,
-               content_tag(:span, t("#{ model_sym }.title.other"), span_options),
-               search_path(:focus => model_sym,
-                           :search_query => params[:search_query]),
-               :remote => true
+  def search_results?(key)
+    SocialStream::Search.count(params[:q],
+                               current_subject,
+                               :key => key) > 0
   end
 end
