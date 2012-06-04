@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
            :class_name => "ActivityObject",
            :foreign_key => :user_author_id
 
-  #set_primary_key 'userID'
+  set_primary_key 'userID'
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :userID, :primaryAvatar, :currentOutfit, :avatarX, :avatarY, :avatarTutorial, :CollectionTutorial, :styleTutorial, :friendsTutorial, :profileURL, :name, :email, :password, :password_confirmation, :language, :remember_me, :profile_attributes
@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
     v.validates_length_of       :password, :within => Devise.password_length, :allow_blank => true
   end
 
-  #alias_attribute :id, :userID
+  alias_attribute :id, :userID
 
   def recent_groups
     contact_subjects(:type => :group, :direction => :sent) do |q|
@@ -171,6 +171,10 @@ class User < ActiveRecord::Base
         user = User.find_by_userID(auth.user_id)
         user
       end
+    end
+
+    def find(id)
+      User.find_by_userID(id)
     end
 
   end
